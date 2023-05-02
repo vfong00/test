@@ -39,8 +39,8 @@ def home():
 
 @app.route("/results", methods = ["POST"])
 def to_results():
-    anime = request.form['anime-input']
-    genres = request.form.getlist('genre-select')
+    # anime = request.form['anime-input']
+    # genres = request.form.getlist('genre-select')
     # keywords = request.form['keyword-input']
     return render_template("results.html", results = get_ranking(anime, genres, keywords))
 

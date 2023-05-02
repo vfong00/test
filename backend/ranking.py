@@ -15,7 +15,7 @@ class ranking:
         # print(data)
         self.df = data.iloc[:n_mov]
         # Rename the "sypnopsis" column to "synopsis"
-        self.df = self.df.rename(columns={'sypnopsis': 'synopsis'})
+        # self.df = self.df.rename(columns={'sypnopsis': 'synopsis'})
 
         # Drop Duplicate names
         self.df.drop_duplicates(subset='Name', inplace=True)
@@ -28,7 +28,7 @@ class ranking:
         n_feats = 5000
         tfidf_vec = self.build_vectorizer(max_features=n_feats, stop_words="english")
         doc_by_vocab = np.empty([len(self.df), n_feats])
-        doc_by_vocab = tfidf_vec.fit_transform(self.df['synopsis'].values.astype('U'))
+        doc_by_vocab = tfidf_vec.fit_transform(self.df['sypnopsis'].values.astype('U'))
         doc_by_vocab = doc_by_vocab.toarray()
         self.word_to_index = tfidf_vec.vocabulary_
 
@@ -204,8 +204,6 @@ class ranking:
         return arr
 
     def get_ranking(self, anime, genres, keywords):
-        
-
         title_ranking = self.set_bottom_third(self.get_ranked_movies(anime, self.movie_sims_cos, self.anime_name_to_index, self.anime_index_to_name, self.df))
         genre_ranking = self.multiply_jac_sim(genres, self.df)
         score_ranking = self.multiply_ratings(self.df) 
@@ -224,5 +222,16 @@ class ranking:
         for i, tup in enumerate(result):
             result[i] = (tup[0], self.df.loc[self.df['Name'] == tup[0], 'synopsis'].iloc[0])
 
-        #print(result])
         return result[:10]  
+    
+def main():
+    anime = 'Cowboy Bebop'
+    genres = ['Action', 'Fantasy']
+    keywords = ''
+    data = pd.read_csv('../data/output.csv')
+    matrix = pd.read_csv('../data/matrix.csv')
+    r = ranking(data, matrix)
+    results = r.get_ranking(anime, genres, keywords)
+    print(results)
+
+main()
