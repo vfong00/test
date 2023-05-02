@@ -1,5 +1,5 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
+<title>{% block title %}{% endblock %} AnimeRec </title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8,16 +8,71 @@
     <div class="full-body-container">
         <div class="top-text">
             <div class="google-colors">
-                <h1 id="google-c">C</h1>
-                <h1 id="google-s">S</h1>
-                <h1 id="google-4">4</h1>
-                <h1 id="google-3">3</h1>
-                <h1 id="google-0-1">0</h1>
-                <h1 id="google-0-2">0</h1>
+                <h1 id="main-heading">AnimeRec</h1>
             </div>
-            <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+            <style>
+                /* Add some basic styles for the form */
+                .form-container {
+                  max-width: 500px;
+                  margin: auto;
+                  padding: 20px;
+                  background-color: #f2f2f2;
+                  border-radius: 10px;
+                }
+          
+                .form-container label,
+                .form-container input,
+                .form-container select,
+                .form-container button {
+                  display: block;
+                  width: 100%;
+                  margin-bottom: 10px;
+                }
+          
+                .form-container label {
+                  font-weight: bold;
+                }
+          
+                .form-container select {
+                  height: 100px;
+                }
+          
+                .form-container button {
+                  background-color: #4CAF50;
+                  color: white;
+                  border: none;
+                  border-radius: 5px;
+                  cursor: pointer;
+                }
+          
+                .form-container button:hover {
+                  background-color: #3e8e41;
+                }
+            </style>
+
+            <div class="form-container">
+                <form action="/results" method="post">
+                    <label for="anime-input">Insert an Anime you liked:</label>
+                    <input type="text" id="anime-input" name="anime-input">
+                    
+                    <label for="genre-select">Select a genre:</label>
+                    <select id="genre-select" name="genre-select" multiple size="3">
+                      <option value="Comedy">Comedy</option>
+                      <option value="Action">Action</option>
+                      <option value="Fantasy">Fantasy</option>
+                      <option value="Adventure">Adventure</option>
+                      <option value="Kids">Kids</option>
+                      <option value="Drama">Drama</option>
+                      <option value="Sci-Fi">Sci-Fi</option>
+                      <option value="Music">Music</option>
+
+                    </select>
+
+                    <label for="anime-input">Enter some keywords:</label>
+                    <input type="text" id="keyword-input" name="keyword-input">
+
+                    <button type="submit">Submit</button>
+                </form>
             </div>
         </div>
         <div id="answer-box">
@@ -26,6 +81,13 @@
     </div>
 
     <script>
+
+        function toResults() {
+            var anime = document.getElementById("anime-input").value
+            var genre = document.getElementById("genre-select").value
+            var keywords = document.getElementById("keyword-input").value
+            window.location.href = '/results'
+        }
 
         function answerBoxTemplate(title,titleDesc){
             return `<div class=''>

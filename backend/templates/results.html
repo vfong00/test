@@ -1,0 +1,94 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+
+<style>
+    .card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 10px;
+    width: 400px;
+    height: 150px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    
+    }
+
+    .card:hover .card-synopsis {
+    display: block;
+    }
+
+    .card-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    }
+
+    .card-synopsis {
+    position: absolute;
+    top: 50%;
+    left: 110%;
+    transform: translateY(-50%);
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: none;
+    width: 400px;
+    font-size: 12px;
+    }
+ </style>
+    
+
+<body>
+    <div class="full-body-container">
+        <div class="top-text">
+            <div class="google-colors">
+                <h2 id="main-heading">Results:</h2>
+            </div>
+
+            <a href="/">
+                <form action="/">
+                     <input type="button" value="Return Home" />
+                </form>
+            </a>
+        </div>
+
+        <div class="results-list">   
+            <div class="card-holder">
+                {% for item in results %}
+                <div class="card">
+                    <h3 class="card-title">{{ loop.index }}. {{ item[0] }}</h3>
+                    <p class="card-synopsis">{{ item[1] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Get all the card elements
+        const cards = document.querySelectorAll('.card');
+
+        // Loop through each card and add a mouseover event listener
+        cards.forEach((card) => {
+            const synopsis = card.querySelector('.card-synopsis');
+            const title = card.querySelector('.card-title');
+            card.addEventListener('mouseover', () => {
+                synopsis.style.display = 'block';
+                title.style.fontSize = '20px';
+            });
+            card.addEventListener('mouseout', () => {
+                synopsis.style.display = 'none';
+            });
+        });
+    </script>
+</body>
