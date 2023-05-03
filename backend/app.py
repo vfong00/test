@@ -3,6 +3,9 @@ import os
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+from ranking import ranking
+import pandas as pd
+import numpy as np
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -21,9 +24,6 @@ os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..",os.curdir))
 # # Path to init.sql file. This file can be replaced with your own file for testing on localhost, but do NOT move the init.sql file
 # mysql_engine.load_file_into_db()
 
-app = Flask(__name__)
-CORS(app)
-
 # Sample search, the LIKE operator in this case is hard-coded, 
 # but if you decide to use SQLAlchemy ORM framework, 
 # there's a much better and cleaner way to do this
@@ -33,15 +33,22 @@ CORS(app)
 #     data = mysql_engine.query_selector(query_sql)
 #     return json.dumps([dict(zip(keys,i)) for i in data])
 
+app = Flask(__name__)
+CORS(app)
+
 @app.route("/")
 def home():
-    return render_template('base.html',title="sample html")
+    return render_template('main.html',title="AnimeRecs")
 
 @app.route("/results", methods = ["POST"])
 def to_results():
-    # anime = request.form['anime-input']
-    # genres = request.form.getlist('genre-select')
+    anime = request.form['anime-input']
+    genres = request.form.getlist('genre-select')
     # keywords = request.form['keyword-input']
-    return render_template("results.html", results = get_ranking(anime, genres, keywords))
+    df = pd.read_csv('../data/output.csv')
+    # matrix = np.genfromtxt('../data/matrix.csv', delimiter=',')
+    r = ranking(df)
+    return render_template("results.html", results = r.get_ranking(anime, genres, ''), title='Results')
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
